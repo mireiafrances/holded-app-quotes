@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
       --coral: #FF6B5B;
@@ -268,6 +270,58 @@
       display: flex; gap: 12px; justify-content: flex-end;
     }
 
+    /* --- Upload zone --- */
+    .upload-zone {
+      border: 2px dashed #E2E8F0; border-radius: var(--radius);
+      padding: 2.5rem; text-align: center; cursor: pointer;
+      transition: all 0.2s ease; margin-bottom: 1rem;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--coral); background: var(--coral-light);
+    }
+    .upload-zone svg { width: 48px; height: 48px; stroke: var(--slate); margin-bottom: 1rem; }
+    .upload-zone:hover svg { stroke: var(--coral); }
+    .upload-zone h4 { font-size: 1rem; color: var(--navy); margin-bottom: 4px; }
+    .upload-zone p { font-size: 0.85rem; color: var(--slate); }
+
+    .file-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--silver); padding: 6px 12px; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; color: var(--navy); margin-top: 0.75rem;
+    }
+    .file-badge svg { width: 14px; height: 14px; stroke: var(--coral); }
+
+    /* --- Preview list --- */
+    .preview-list { max-height: 400px; overflow-y: auto; }
+    .preview-item {
+      padding: 1rem; border: 1px solid #E2E8F0; border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem; position: relative;
+    }
+    .preview-item .preview-text {
+      font-family: 'Fraunces', serif; font-style: italic;
+      font-size: 0.95rem; line-height: 1.6; color: var(--navy); margin-bottom: 0.5rem;
+    }
+    .preview-item .preview-meta {
+      font-size: 0.8rem; color: var(--slate);
+    }
+    .preview-item .preview-remove {
+      position: absolute; top: 8px; right: 8px; width: 24px; height: 24px;
+      border: none; background: var(--silver); border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .preview-item .preview-remove:hover { background: var(--coral-light); }
+    .preview-item .preview-remove svg { width: 14px; height: 14px; stroke: var(--slate); }
+
+    .preview-count {
+      font-size: 0.85rem; color: var(--slate); margin-bottom: 1rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid #F1F5F9;
+    }
+    .preview-count strong { color: var(--coral); }
+
+    .processing-state {
+      text-align: center; padding: 2rem; color: var(--slate);
+    }
+
     /* --- Toast --- */
     .toast {
       position: fixed; bottom: 2rem; right: 2rem; background: var(--navy);
@@ -322,7 +376,11 @@
       <div class="header-actions">
         <button class="btn btn-secondary" onclick="exportQuotes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export CSV
+          Export
+        </button>
+        <button class="btn btn-secondary" onclick="openUploadModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload
         </button>
         <button class="btn btn-primary" onclick="openModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -413,6 +471,73 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
         <button class="btn btn-primary" id="btn-save" onclick="saveQuote()">Save quote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div class="modal-overlay" id="modal-upload">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Upload document</h2>
+        <button class="modal-close" onclick="closeUploadModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          <h4>Drop files here or click to browse</h4>
+          <p>Supports PDF, TXT, and CSV files</p>
+          <input type="file" id="file-input" style="display:none" accept=".pdf,.txt,.csv" onchange="handleFileSelect(this)">
+        </div>
+        <div id="file-selected" style="display:none"></div>
+        <div class="form-group">
+          <label>Default speaker (optional)</label>
+          <input type="text" id="upload-speaker" placeholder="Speaker name for all extracted quotes">
+        </div>
+        <div class="form-group">
+          <label>Default company (optional)</label>
+          <input type="text" id="upload-company" placeholder="Company name for all extracted quotes">
+        </div>
+        <div class="form-group">
+          <label>Source label</label>
+          <input type="text" id="upload-source" placeholder="Name of the document or event">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+        <button class="btn btn-primary" id="btn-extract" onclick="processFile()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Extract quotes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal (extracted quotes before saving) -->
+  <div class="modal-overlay" id="modal-preview">
+    <div class="modal" style="max-width:700px">
+      <div class="modal-header">
+        <h2>Review extracted quotes</h2>
+        <button class="modal-close" onclick="closePreviewModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-count" id="preview-count"></div>
+        <div class="preview-list" id="preview-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePreviewModal()">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-all" onclick="saveAllPreviewed()">
+          Save all to database
+        </button>
       </div>
     </div>
   </div>
@@ -784,6 +909,259 @@
     }
 
     // ============================================================
+    // Upload & File Parsing
+    // ============================================================
+    let selectedFile = null;
+    let previewedQuotes = [];
+
+    function openUploadModal() {
+      selectedFile = null;
+      document.getElementById('file-input').value = '';
+      document.getElementById('file-selected').style.display = 'none';
+      document.getElementById('upload-speaker').value = '';
+      document.getElementById('upload-company').value = '';
+      document.getElementById('upload-source').value = '';
+      document.getElementById('btn-extract').disabled = true;
+      document.getElementById('modal-upload').classList.add('active');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('modal-upload').classList.remove('active');
+    }
+
+    function closePreviewModal() {
+      document.getElementById('modal-preview').classList.remove('active');
+    }
+
+    // Drag & drop
+    const dropZone = document.getElementById('upload-zone');
+    if (dropZone) {
+      ['dragenter','dragover'].forEach(evt => {
+        dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+      });
+      ['dragleave','drop'].forEach(evt => {
+        dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+      });
+      dropZone.addEventListener('drop', e => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) pickFile(files[0]);
+      });
+    }
+
+    function handleFileSelect(input) {
+      if (input.files.length > 0) pickFile(input.files[0]);
+    }
+
+    function pickFile(file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!['pdf','txt','csv'].includes(ext)) {
+        showToast('Only PDF, TXT, and CSV files are supported', true);
+        return;
+      }
+      selectedFile = file;
+      document.getElementById('file-selected').style.display = 'block';
+      document.getElementById('file-selected').innerHTML = `
+        <div class="file-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          ${escapeHtml(file.name)} (${(file.size / 1024).toFixed(1)} KB)
+        </div>`;
+      document.getElementById('btn-extract').disabled = false;
+      // Auto-fill source from filename
+      if (!document.getElementById('upload-source').value) {
+        document.getElementById('upload-source').value = file.name.replace(/\.[^.]+$/, '');
+      }
+    }
+
+    async function processFile() {
+      if (!selectedFile) return;
+      const btn = document.getElementById('btn-extract');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0"></div> Processing...';
+
+      const ext = selectedFile.name.split('.').pop().toLowerCase();
+      let extractedQuotes = [];
+
+      try {
+        if (ext === 'csv') {
+          extractedQuotes = await parseCSV(selectedFile);
+        } else if (ext === 'txt') {
+          extractedQuotes = await parseTXT(selectedFile);
+        } else if (ext === 'pdf') {
+          extractedQuotes = await parsePDF(selectedFile);
+        }
+
+        if (extractedQuotes.length === 0) {
+          showToast('No quotes could be extracted from this file', true);
+          return;
+        }
+
+        // Apply defaults
+        const defSpeaker = document.getElementById('upload-speaker').value.trim();
+        const defCompany = document.getElementById('upload-company').value.trim();
+        const defSource  = document.getElementById('upload-source').value.trim() || selectedFile.name;
+
+        extractedQuotes = extractedQuotes.map(q => ({
+          ...q,
+          speaker: q.speaker || defSpeaker || 'Unknown',
+          company: q.company || defCompany || 'Unknown',
+          source:  q.source  || defSource,
+          source_key: 'custom',
+          theme: q.theme || 'General',
+          role: q.role || ''
+        }));
+
+        previewedQuotes = extractedQuotes;
+        closeUploadModal();
+        showPreview();
+
+      } catch (e) {
+        console.error('File processing error:', e);
+        showToast('Error processing file: ' + e.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Extract quotes';
+      }
+    }
+
+    // --- CSV Parser ---
+    async function parseCSV(file) {
+      return new Promise((resolve, reject) => {
+        Papa.parse(file, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            const rows = results.data;
+            const quotes = rows.map(row => {
+              // Try to match common column names
+              const text = row.text || row.Text || row.quote || row.Quote || row.content || row.Content || '';
+              if (!text.trim()) return null;
+              return {
+                text: text.trim(),
+                speaker: (row.speaker || row.Speaker || row.name || row.Name || row.author || row.Author || '').trim(),
+                company: (row.company || row.Company || row.organization || row.Organization || row.empresa || row.Empresa || '').trim(),
+                role:    (row.role || row.Role || row.title || row.Title || row.cargo || row.Cargo || '').trim(),
+                source:  (row.source || row.Source || row.fuente || row.Fuente || '').trim(),
+                theme:   (row.theme || row.Theme || row.category || row.Category || row.tema || row.Tema || '').trim()
+              };
+            }).filter(Boolean);
+            resolve(quotes);
+          },
+          error: function(err) { reject(err); }
+        });
+      });
+    }
+
+    // --- TXT Parser ---
+    async function parseTXT(file) {
+      const text = await file.text();
+      // Split by double newlines (paragraphs) or lines starting with quotes
+      const blocks = text.split(/\n\s*\n/).map(b => b.trim()).filter(b => b.length > 20);
+
+      return blocks.map(block => {
+        // Try to detect "quote" — Author pattern
+        const dashMatch = block.match(/^["\u201C]?(.+?)["\u201D]?\s*[-\u2014\u2013]\s*(.+)$/s);
+        if (dashMatch) {
+          return { text: dashMatch[1].trim().replace(/^["\u201C]|["\u201D]$/g, ''), speaker: dashMatch[2].trim() };
+        }
+        // Otherwise the whole block is the quote text
+        return { text: block.replace(/^["\u201C]|["\u201D]$/g, '').trim() };
+      });
+    }
+
+    // --- PDF Parser ---
+    async function parsePDF(file) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n\n';
+      }
+
+      // Same logic as TXT
+      const blocks = fullText.split(/\n\s*\n/).map(b => b.trim()).filter(b => b.length > 30);
+      return blocks.map(block => {
+        const dashMatch = block.match(/^["\u201C]?(.+?)["\u201D]?\s*[-\u2014\u2013]\s*(.+)$/s);
+        if (dashMatch) {
+          return { text: dashMatch[1].trim().replace(/^["\u201C]|["\u201D]$/g, ''), speaker: dashMatch[2].trim() };
+        }
+        return { text: block.replace(/^["\u201C]|["\u201D]$/g, '').trim() };
+      });
+    }
+
+    // --- Preview ---
+    function showPreview() {
+      const list = document.getElementById('preview-list');
+      document.getElementById('preview-count').innerHTML =
+        `<strong>${previewedQuotes.length}</strong> quotes extracted. Review and remove any you don\u2019t want, then save.`;
+
+      list.innerHTML = previewedQuotes.map((q, i) => `
+        <div class="preview-item" data-idx="${i}">
+          <button class="preview-remove" onclick="removePreviewItem(${i})" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <div class="preview-text">\u201C${escapeHtml(q.text.substring(0, 200))}${q.text.length > 200 ? '...' : ''}\u201D</div>
+          <div class="preview-meta">${escapeHtml(q.speaker)} &middot; ${escapeHtml(q.company)} &middot; ${escapeHtml(q.theme)}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('modal-preview').classList.add('active');
+    }
+
+    function removePreviewItem(idx) {
+      previewedQuotes.splice(idx, 1);
+      if (previewedQuotes.length === 0) {
+        closePreviewModal();
+        showToast('All quotes removed');
+        return;
+      }
+      showPreview();
+    }
+
+    async function saveAllPreviewed() {
+      if (previewedQuotes.length === 0) return;
+
+      const btn = document.getElementById('btn-save-all');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        if (useSupabase) {
+          const { data, error } = await supabaseClient
+            .from('quotes')
+            .insert(previewedQuotes)
+            .select();
+          if (error) throw error;
+          quotes = [...data, ...quotes];
+        } else {
+          const newQuotes = previewedQuotes.map((q, i) => ({ ...q, id: Date.now() + i }));
+          quotes = [...newQuotes, ...quotes];
+        }
+
+        closePreviewModal();
+        updateStats();
+        updateFilterTabs();
+        filterQuotes();
+        showToast(`${previewedQuotes.length} quotes saved!`);
+        previewedQuotes = [];
+      } catch (e) {
+        console.error('Bulk save error:', e);
+        showToast('Error saving quotes: ' + e.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save all to database';
+      }
+    }
+
+    // ============================================================
     // Toast
     // ============================================================
     function showToast(message, isError = false) {
@@ -794,8 +1172,10 @@
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Escape closes modal
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    // Escape closes modals
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeModal(); closeUploadModal(); closePreviewModal(); }
+    });
 
     // Go!
     init();
