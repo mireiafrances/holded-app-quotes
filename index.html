@@ -493,8 +493,8 @@
             <line x1="9" y1="15" x2="15" y2="15"/>
           </svg>
           <h4>Drop files here or click to browse</h4>
-          <p>Supports PDF, TXT, and CSV files</p>
-          <input type="file" id="file-input" style="display:none" accept=".pdf,.txt,.csv" onchange="handleFileSelect(this)">
+          <p>Supports PDF, TXT, CSV, SRT and VTT files</p>
+          <input type="file" id="file-input" style="display:none" accept=".pdf,.txt,.csv,.srt,.vtt" onchange="handleFileSelect(this)">
         </div>
         <div id="file-selected" style="display:none"></div>
         <div class="form-group">
@@ -954,8 +954,8 @@
 
     function pickFile(file) {
       const ext = file.name.split('.').pop().toLowerCase();
-      if (!['pdf','txt','csv'].includes(ext)) {
-        showToast('Only PDF, TXT, and CSV files are supported', true);
+      if (!['pdf','txt','csv','srt','vtt'].includes(ext)) {
+        showToast('Only PDF, TXT, CSV, SRT and VTT files are supported', true);
         return;
       }
       selectedFile = file;
@@ -989,6 +989,8 @@
           extractedQuotes = await parseCSV(selectedFile);
         } else if (ext === 'txt') {
           extractedQuotes = await parseTXT(selectedFile);
+        } else if (ext === 'srt' || ext === 'vtt') {
+          extractedQuotes = await parseSRT(selectedFile);
         } else if (ext === 'pdf') {
           extractedQuotes = await parsePDF(selectedFile);
         }
@@ -1069,6 +1071,46 @@
         // Otherwise the whole block is the quote text
         return { text: block.replace(/^["\u201C]|["\u201D]$/g, '').trim() };
       });
+    }
+
+    // --- SRT / VTT Parser ---
+    async function parseSRT(file) {
+      const text = await file.text();
+      // Remove VTT header if present
+      const clean = text.replace(/^WEBVTT[\s\S]*?\n\n/, '');
+      // Split into subtitle blocks (number + timecode + text)
+      const blocks = clean.split(/\n\s*\n/).filter(b => b.trim());
+      const lines = [];
+
+      for (const block of blocks) {
+        const parts = block.trim().split('\n');
+        // Find the text lines (skip index number and timecode)
+        const textLines = parts.filter(line =>
+          !line.match(/^\d+\s*$/) &&
+          !line.match(/\d{2}:\d{2}[\.:]\d{2}/) &&
+          line.trim()
+        );
+        if (textLines.length > 0) {
+          // Strip HTML tags from subtitles
+          const cleanText = textLines.join(' ').replace(/<[^>]+>/g, '').trim();
+          if (cleanText) lines.push(cleanText);
+        }
+      }
+
+      // Merge consecutive lines into larger meaningful chunks (~2-4 sentences)
+      const merged = [];
+      let buffer = '';
+      for (const line of lines) {
+        buffer += (buffer ? ' ' : '') + line;
+        // Split on sentence endings when buffer is long enough
+        if (buffer.length > 120 && /[.!?]$/.test(buffer)) {
+          merged.push(buffer);
+          buffer = '';
+        }
+      }
+      if (buffer.length > 20) merged.push(buffer);
+
+      return merged.map(text => ({ text }));
     }
 
     // --- PDF Parser ---
