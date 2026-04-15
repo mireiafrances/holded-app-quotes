@@ -6,32 +6,33 @@
   <title>Quote Archive — Holded</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
-      --coral: #FF6B5B;
-      --coral-light: #FFF0EE;
-      --coral-dark: #E04D3D;
-      --navy: #1A1F36;
-      --navy-light: #2D3348;
-      --slate: #64748B;
-      --silver: #F1F5F9;
+      --coral: #FF5454;
+      --coral-light: #FFF0EF;
+      --coral-dark: #E03E3E;
+      --navy: #111827;
+      --navy-light: #1F2937;
+      --slate: #6B7280;
+      --silver: #F3F4F6;
       --white: #FFFFFF;
-      --shadow-sm: 0 1px 2px rgba(26,31,54,0.05);
-      --shadow-md: 0 4px 12px rgba(26,31,54,0.08);
-      --shadow-lg: 0 12px 40px rgba(26,31,54,0.12);
-      --radius: 16px;
+      --blue: #4181FA;
+      --shadow-sm: 0 1px 2px rgba(17,24,39,0.05);
+      --shadow-md: 0 4px 12px rgba(17,24,39,0.08);
+      --shadow-lg: 0 12px 40px rgba(17,24,39,0.12);
+      --radius: 12px;
       --radius-sm: 8px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: linear-gradient(145deg, #FAFBFC 0%, #F1F5F9 100%);
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(145deg, #FFFFFF 0%, #F3F4F6 100%);
       min-height: 100vh;
       color: var(--navy);
       line-height: 1.6;
@@ -73,13 +74,13 @@
     .logo-icon {
       width: 52px; height: 52px; background: var(--coral);
       border-radius: 14px; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 16px rgba(255,107,91,0.3);
+      box-shadow: 0 4px 16px rgba(255,84,84,0.3);
     }
     .logo-icon svg { width: 26px; height: 26px; stroke: white; fill: none; }
 
     .logo-text h1 {
-      font-family: 'Fraunces', serif; font-size: 1.75rem;
-      font-weight: 700; letter-spacing: -0.02em; color: var(--navy);
+      font-family: 'Inter', sans-serif; font-size: 1.75rem;
+      font-weight: 600; letter-spacing: -0.03em; color: var(--navy);
     }
     .logo-text span { font-size: 0.875rem; color: var(--slate); font-weight: 400; }
 
@@ -93,11 +94,11 @@
     }
     .btn-primary {
       background: var(--coral); color: white;
-      box-shadow: 0 4px 12px rgba(255,107,91,0.25);
+      box-shadow: 0 4px 12px rgba(255,84,84,0.25);
     }
     .btn-primary:hover {
       background: var(--coral-dark); transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(255,107,91,0.35);
+      box-shadow: 0 6px 20px rgba(255,84,84,0.35);
     }
     .btn-secondary { background: white; color: var(--navy); border: 1px solid #E2E8F0; }
     .btn-secondary:hover { background: var(--silver); border-color: #CBD5E1; }
@@ -119,7 +120,7 @@
       text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
     }
     .stat-card .value {
-      font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: var(--navy);
+      font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; color: var(--navy);
     }
 
     /* --- Search --- */
@@ -139,7 +140,7 @@
       border-radius: var(--radius-sm); font-size: 1rem; font-family: inherit;
       transition: all 0.2s ease;
     }
-    .search-input:focus { outline: none; border-color: var(--coral); box-shadow: 0 0 0 3px rgba(255,107,91,0.1); }
+    .search-input:focus { outline: none; border-color: var(--coral); box-shadow: 0 0 0 3px rgba(255,84,84,0.1); }
 
     .filter-tabs { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
     .filter-tab {
@@ -161,14 +162,14 @@
     }
     .quote-card::before {
       content: '\201C'; position: absolute; top: -20px; right: 20px;
-      font-family: 'Fraunces', serif; font-size: 8rem; color: var(--coral);
+      font-family: 'Inter', sans-serif; font-size: 8rem; color: var(--coral);
       opacity: 0.06; line-height: 1; pointer-events: none;
     }
     .quote-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 
     .quote-text {
-      font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 400;
-      font-style: italic; line-height: 1.7; color: var(--navy);
+      font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 400;
+      font-style: normal; line-height: 1.7; color: var(--navy);
       margin-bottom: 1.25rem; position: relative; z-index: 1;
     }
 
@@ -188,7 +189,8 @@
       padding-top: 1rem; border-top: 1px solid #F1F5F9;
     }
     .tag { padding: 4px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 500; }
-    .tag-source { background: #EEF2FF; color: #4F46E5; }
+    .tag-source { background: #EBF1FF; color: var(--blue); }
+    .tag-author { background: #FEF3C7; color: #92400E; }
     .tag-page { background: #F0FDF4; color: #16A34A; }
     .tag-theme { background: var(--coral-light); color: var(--coral-dark); }
 
@@ -208,7 +210,7 @@
 
     .empty-state { text-align: center; padding: 4rem 2rem; color: var(--slate); }
     .empty-state svg { width: 64px; height: 64px; stroke: #CBD5E1; margin-bottom: 1rem; }
-    .empty-state h3 { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 0.5rem; }
+    .empty-state h3 { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.03em; color: var(--navy); margin-bottom: 0.5rem; }
 
     /* --- Loading --- */
     .loading-state { text-align: center; padding: 4rem 2rem; color: var(--slate); }
@@ -241,7 +243,7 @@
       padding: 1.5rem; border-bottom: 1px solid #F1F5F9;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .modal-header h2 { font-family: 'Fraunces', serif; font-size: 1.35rem; font-weight: 600; }
+    .modal-header h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.03em; }
 
     .modal-close {
       width: 36px; height: 36px; border-radius: 8px; border: none;
@@ -262,13 +264,58 @@
     .form-group textarea { min-height: 120px; resize: vertical; }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
       outline: none; border-color: var(--coral);
-      box-shadow: 0 0 0 3px rgba(255,107,91,0.1);
+      box-shadow: 0 0 0 3px rgba(255,84,84,0.1);
     }
 
     .modal-footer {
       padding: 1rem 1.5rem; border-top: 1px solid #F1F5F9;
       display: flex; gap: 12px; justify-content: flex-end;
     }
+
+    /* --- Bulk edit bar --- */
+    .bulk-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--navy); color: white;
+      padding: 1rem 2rem; display: flex; align-items: center;
+      gap: 16px; z-index: 90; transform: translateY(100%);
+      transition: transform 0.3s ease; flex-wrap: wrap;
+      box-shadow: 0 -4px 20px rgba(17,24,39,0.2);
+    }
+    .bulk-bar.active { transform: translateY(0); }
+    .bulk-bar .bulk-count {
+      font-weight: 600; font-size: 0.95rem; margin-right: auto;
+    }
+    .bulk-bar select {
+      padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid #374151;
+      background: var(--navy-light); color: white; font-family: inherit; font-size: 0.85rem;
+    }
+    .bulk-bar select option { background: var(--navy); }
+    .bulk-bar .btn { padding: 8px 16px; font-size: 0.85rem; }
+    .bulk-bar .btn-ghost {
+      background: transparent; color: #9CA3AF; border: 1px solid #374151;
+    }
+    .bulk-bar .btn-ghost:hover { color: white; border-color: #6B7280; }
+
+    .quote-card.selectable { cursor: pointer; }
+    .quote-card.selectable:hover { border-color: var(--coral); }
+    .quote-card.selected {
+      border-color: var(--coral); background: var(--coral-light);
+    }
+    .quote-checkbox {
+      position: absolute; top: 1rem; left: 1rem; width: 22px; height: 22px;
+      border-radius: 6px; border: 2px solid #D1D5DB; background: white;
+      display: none; align-items: center; justify-content: center;
+      transition: all 0.2s ease; z-index: 2;
+    }
+    .quote-card.selectable .quote-checkbox { display: flex; }
+    .quote-card.selected .quote-checkbox {
+      background: var(--coral); border-color: var(--coral);
+    }
+    .quote-card.selected .quote-checkbox svg { display: block; }
+    .quote-checkbox svg { display: none; width: 14px; height: 14px; stroke: white; stroke-width: 3; }
+
+    .quote-card.selectable { padding-left: 3.5rem; }
+    .quote-card.selectable .quote-actions { display: none; }
 
     /* --- Upload zone --- */
     .upload-zone {
@@ -298,7 +345,7 @@
       margin-bottom: 0.75rem; position: relative;
     }
     .preview-item .preview-text {
-      font-family: 'Fraunces', serif; font-style: italic;
+      font-family: 'Inter', sans-serif; font-style: normal;
       font-size: 0.95rem; line-height: 1.6; color: var(--navy); margin-bottom: 0.5rem;
     }
     .preview-item .preview-meta {
@@ -369,7 +416,7 @@
           </svg>
         </div>
         <div class="logo-text">
-          <h1>Quote Archive</h1>
+          <h1>Quote Archive<span style="color:var(--coral)">.</span></h1>
           <span>Expert Partner social proof</span>
         </div>
       </div>
@@ -381,6 +428,10 @@
         <button class="btn btn-secondary" onclick="openUploadModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Upload
+        </button>
+        <button class="btn btn-secondary" id="btn-bulk-toggle" onclick="toggleBulkMode()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Bulk edit
         </button>
         <button class="btn btn-primary" onclick="openModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -395,16 +446,16 @@
         <div class="value" id="stat-total">-</div>
       </div>
       <div class="stat-card">
-        <div class="label">Sources</div>
-        <div class="value" id="stat-sources">-</div>
+        <div class="label">Solution Partners</div>
+        <div class="value" id="stat-solution-partner">-</div>
       </div>
       <div class="stat-card">
-        <div class="label">Speakers</div>
-        <div class="value" id="stat-speakers">-</div>
+        <div class="label">Asesorías</div>
+        <div class="value" id="stat-asesoria">-</div>
       </div>
       <div class="stat-card">
-        <div class="label">Themes</div>
-        <div class="value" id="stat-themes">-</div>
+        <div class="label">Otras</div>
+        <div class="value" id="stat-otro">-</div>
       </div>
     </div>
 
@@ -456,6 +507,15 @@
           <input type="text" id="form-company" placeholder="Company or organization">
         </div>
         <div class="form-group">
+          <label>Author type *</label>
+          <select id="form-author-type">
+            <option value="">Select type...</option>
+            <option value="solution_partner">Solution Partner</option>
+            <option value="asesoria">Asesoría</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label>Role / Title</label>
           <input type="text" id="form-role" placeholder="CEO, Partner, Founder...">
         </div>
@@ -465,7 +525,15 @@
         </div>
         <div class="form-group">
           <label>Theme</label>
-          <input type="text" id="form-theme" placeholder="Collaboration, Digitalization...">
+          <select id="form-theme">
+            <option value="">Select theme...</option>
+            <option value="Facturación">Facturación</option>
+            <option value="Contabilidad">Contabilidad</option>
+            <option value="Nóminas">Nóminas</option>
+            <option value="Inventario">Inventario</option>
+            <option value="Conciliación bancaria">Conciliación bancaria</option>
+            <option value="General">General</option>
+          </select>
         </div>
       </div>
       <div class="modal-footer">
@@ -497,6 +565,27 @@
           <input type="file" id="file-input" style="display:none" accept=".pdf,.txt,.csv,.srt,.vtt" onchange="handleFileSelect(this)">
         </div>
         <div id="file-selected" style="display:none"></div>
+        <div class="form-group">
+          <label>Author type *</label>
+          <select id="upload-author-type">
+            <option value="">Select type...</option>
+            <option value="solution_partner">Solution Partner</option>
+            <option value="asesoria">Asesoría</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Default theme</label>
+          <select id="upload-theme">
+            <option value="">Select theme...</option>
+            <option value="Facturación">Facturación</option>
+            <option value="Contabilidad">Contabilidad</option>
+            <option value="Nóminas">Nóminas</option>
+            <option value="Inventario">Inventario</option>
+            <option value="Conciliación bancaria">Conciliación bancaria</option>
+            <option value="General">General</option>
+          </select>
+        </div>
         <div class="form-group">
           <label>Default speaker (optional)</label>
           <input type="text" id="upload-speaker" placeholder="Speaker name for all extracted quotes">
@@ -542,6 +631,29 @@
     </div>
   </div>
 
+  <!-- Bulk edit bar -->
+  <div class="bulk-bar" id="bulk-bar">
+    <span class="bulk-count" id="bulk-count">0 selected</span>
+    <select id="bulk-author-type">
+      <option value="">Set author type...</option>
+      <option value="solution_partner">Solution Partner</option>
+      <option value="asesoria">Asesoría</option>
+      <option value="otro">Otro</option>
+    </select>
+    <select id="bulk-theme">
+      <option value="">Set theme...</option>
+      <option value="Facturación">Facturación</option>
+      <option value="Contabilidad">Contabilidad</option>
+      <option value="Nóminas">Nóminas</option>
+      <option value="Inventario">Inventario</option>
+      <option value="Conciliación bancaria">Conciliación bancaria</option>
+      <option value="General">General</option>
+    </select>
+    <button class="btn btn-primary" onclick="applyBulkEdit()">Apply</button>
+    <button class="btn btn-ghost" onclick="selectAllQuotes()">Select all</button>
+    <button class="btn btn-ghost" onclick="toggleBulkMode()">Cancel</button>
+  </div>
+
   <!-- Toast notification -->
   <div class="toast" id="toast">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -567,31 +679,31 @@
 
     // Seed data (used in demo mode or to populate DB on first run)
     const SEED_QUOTES = [
-      { text: "Nosotros somos una asesoría colaborativa. Buscamos que tanto el trabajo del cliente valga para nosotros como que nuestro trabajo valga para el cliente.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Colaboración" },
-      { text: "Lo que conseguimos es que la contabilidad se convierta en información financiera para que el cliente tenga esa información en la nube y accesible y por lo tanto, a partir de ahí puede tomar decisiones.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Toma de decisiones" },
-      { text: "Hay clientes que necesitan una contabilidad más al día, donde no es impuesto centrista. Lo importante son las finanzas.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Enfoque financiero" },
-      { text: "Lo que encontramos con Holded es esa herramienta colaborativa donde el cliente y nosotros podíamos trabajar en un mismo entorno, donde nuestro trabajo además pasaba a ser transparente.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Transparencia" },
-      { text: "El cliente con una herramienta colaborativa es propietario de esa información financiera y a partir de ahí puede tomar las decisiones.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Propiedad de datos" },
-      { text: "No hay que confundir ser simplista con ser simple. Ser simple es mejorar la vida para todos y dar la mejor herramienta y ser lo más productivos posible.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Simplicidad" },
-      { text: "No somos una asesoría impuesto centrista. Trabajamos para que el empresario conozca los datos financieros de su empresa.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Valor añadido" },
-      { text: "Si los clientes nos enviaran las facturas de forma manual como se hacía antaño, no podríamos tener tantos clientes como tenemos ahora.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Escalabilidad" },
-      { text: "Holded cubre el 90% de las necesidades del 90% de las empresas.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Cobertura" },
-      { text: "Ser partner de Holded significa para el cliente seguridad de tener partners aliados. Para nosotros significa crecer junto a un partner estratégico que nos da garantía de éxito.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Partnership" },
-      { text: "Van a ir desapareciendo estas herramientas opacas hacia el cliente. Va a ser todo mucho más transparente.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Futuro" },
-      { text: "No hay nada más fácil que tenerlo todo integrado.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Integración" },
-      { text: "El futuro va a ser Holded. Ya no hay marcha atrás.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", theme: "Futuro" },
-      { text: "Holded se ha convertido en una pieza clave en aquellas gestorías que desean dar el paso de la digitalización.", speaker: "Manel Montero", company: "MANPAT", role: "CEO de MANPAT", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Digitalización" },
-      { text: "Conseguimos tener la información actualizada, de una forma muy sencilla y sin estar perdiendo tiempo en la introducción de datos.", speaker: "Manel Montero", company: "MANPAT", role: "CEO de MANPAT", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Eficiencia" },
-      { text: "El módulo de facturación de Holded lo hace todo. Cualquier empresa puede entender sus servicios o sus productos y estandarizarlos. Funciona increíblemente bien.", speaker: "Josep Rovira", company: "Cratevo", role: "Fundador y CEO de Cratevo", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Facturación" },
-      { text: "Este año hemos completado la presentación de impuestos con éxito de la mano de Holded. Realmente sentimos que trabajamos como un equipo.", speaker: "Javier Piqueras", company: "PQS Consulting", role: "CEO de PQS Consulting", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Colaboración" },
-      { text: "Con Holded, la conciliación bancaria no solo es rápida, es clave para la contabilidad colaborativa.", speaker: "Gloria Casao", company: "The Table", role: "CEO y socia de The Table", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Conciliación bancaria" },
-      { text: "Ahora creamos un proyecto para cada cliente y nuestro equipo registra las horas. Así podemos calcular el precio/hora por cliente y tener control sobre su rentabilidad.", speaker: "Javier Díaz", company: "Exentys", role: "CEO y fundador de Exentys", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Rentabilidad" },
-      { text: "La contabilidad colaborativa es una nueva forma de trabajar que rompe barreras y genera una relación de mayor transparencia y confianza entre asesores y clientes.", speaker: "Holded", company: "Holded", role: "Documento oficial", source: "Contabilidad Colaborativa 2024", source_key: "collab", theme: "Transformación" },
-      { text: "En pleno siglo XXI, la digitalización ha dejado de ser una opción para convertirse en una necesidad absoluta.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", theme: "Digitalización" },
-      { text: "Tener acceso real a la información de facturación es clave para mejorar el cumplimiento fiscal y dar un mejor servicio a empresas y autónomos.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", theme: "Cumplimiento fiscal" },
-      { text: "Si el software y las asesorías están asociados, todos sus clientes podrán estar tranquilos, ya que se habrá solucionado su problema.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", theme: "Partnerships" },
-      { text: "El consejo es claro: cuanto antes, mejor. No lo dejes para el último momento.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", theme: "Preparación" },
-      { text: "Verifactu es una oportunidad para colaborar más con nuestros clientes y, gracias a la facilidad de Holded en esta fase voluntaria, las asesorías podrán llegar preparadas al 1 de enero.", speaker: "Florencia D'Andrea", company: "Lidera tu negocio", role: "Directora del área fiscal y contable", source: "Verifactu con Holded", source_key: "verifactu", theme: "Oportunidad" }
+      { text: "Nosotros somos una asesoría colaborativa. Buscamos que tanto el trabajo del cliente valga para nosotros como que nuestro trabajo valga para el cliente.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Contabilidad" },
+      { text: "Lo que conseguimos es que la contabilidad se convierta en información financiera para que el cliente tenga esa información en la nube y accesible y por lo tanto, a partir de ahí puede tomar decisiones.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Contabilidad" },
+      { text: "Hay clientes que necesitan una contabilidad más al día, donde no es impuesto centrista. Lo importante son las finanzas.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Contabilidad" },
+      { text: "Lo que encontramos con Holded es esa herramienta colaborativa donde el cliente y nosotros podíamos trabajar en un mismo entorno, donde nuestro trabajo además pasaba a ser transparente.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Contabilidad" },
+      { text: "El cliente con una herramienta colaborativa es propietario de esa información financiera y a partir de ahí puede tomar las decisiones.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Contabilidad" },
+      { text: "No hay que confundir ser simplista con ser simple. Ser simple es mejorar la vida para todos y dar la mejor herramienta y ser lo más productivos posible.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "General" },
+      { text: "No somos una asesoría impuesto centrista. Trabajamos para que el empresario conozca los datos financieros de su empresa.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Contabilidad" },
+      { text: "Si los clientes nos enviaran las facturas de forma manual como se hacía antaño, no podríamos tener tantos clientes como tenemos ahora.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "Facturación" },
+      { text: "Holded cubre el 90% de las necesidades del 90% de las empresas.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "General" },
+      { text: "Ser partner de Holded significa para el cliente seguridad de tener partners aliados. Para nosotros significa crecer junto a un partner estratégico que nos da garantía de éxito.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "General" },
+      { text: "Van a ir desapareciendo estas herramientas opacas hacia el cliente. Va a ser todo mucho más transparente.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "General" },
+      { text: "No hay nada más fácil que tenerlo todo integrado.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "General" },
+      { text: "El futuro va a ser Holded. Ya no hay marcha atrás.", speaker: "Fin2Go", company: "Fin2Go", role: "Asesoría colaborativa", source: "FIN2GO × Holded Interview", source_key: "fin2go", author_type: "asesoria", theme: "General" },
+      { text: "Holded se ha convertido en una pieza clave en aquellas gestorías que desean dar el paso de la digitalización.", speaker: "Manel Montero", company: "MANPAT", role: "CEO de MANPAT", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "solution_partner", theme: "Contabilidad" },
+      { text: "Conseguimos tener la información actualizada, de una forma muy sencilla y sin estar perdiendo tiempo en la introducción de datos.", speaker: "Manel Montero", company: "MANPAT", role: "CEO de MANPAT", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "solution_partner", theme: "Contabilidad" },
+      { text: "El módulo de facturación de Holded lo hace todo. Cualquier empresa puede entender sus servicios o sus productos y estandarizarlos. Funciona increíblemente bien.", speaker: "Josep Rovira", company: "Cratevo", role: "Fundador y CEO de Cratevo", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "solution_partner", theme: "Facturación" },
+      { text: "Este año hemos completado la presentación de impuestos con éxito de la mano de Holded. Realmente sentimos que trabajamos como un equipo.", speaker: "Javier Piqueras", company: "PQS Consulting", role: "CEO de PQS Consulting", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "solution_partner", theme: "Contabilidad" },
+      { text: "Con Holded, la conciliación bancaria no solo es rápida, es clave para la contabilidad colaborativa.", speaker: "Gloria Casao", company: "The Table", role: "CEO y socia de The Table", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "solution_partner", theme: "Conciliación bancaria" },
+      { text: "Ahora creamos un proyecto para cada cliente y nuestro equipo registra las horas. Así podemos calcular el precio/hora por cliente y tener control sobre su rentabilidad.", speaker: "Javier Díaz", company: "Exentys", role: "CEO y fundador de Exentys", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "solution_partner", theme: "Contabilidad" },
+      { text: "La contabilidad colaborativa es una nueva forma de trabajar que rompe barreras y genera una relación de mayor transparencia y confianza entre asesores y clientes.", speaker: "Holded", company: "Holded", role: "Documento oficial", source: "Contabilidad Colaborativa 2024", source_key: "collab", author_type: "otro", theme: "Contabilidad" },
+      { text: "En pleno siglo XXI, la digitalización ha dejado de ser una opción para convertirse en una necesidad absoluta.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", author_type: "otro", theme: "Facturación" },
+      { text: "Tener acceso real a la información de facturación es clave para mejorar el cumplimiento fiscal y dar un mejor servicio a empresas y autónomos.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", author_type: "otro", theme: "Facturación" },
+      { text: "Si el software y las asesorías están asociados, todos sus clientes podrán estar tranquilos, ya que se habrá solucionado su problema.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", author_type: "otro", theme: "Facturación" },
+      { text: "El consejo es claro: cuanto antes, mejor. No lo dejes para el último momento.", speaker: "Javier Hurtado", company: "AEAT", role: "Representante de la AEAT", source: "Verifactu con Holded", source_key: "verifactu", author_type: "otro", theme: "Facturación" },
+      { text: "Verifactu es una oportunidad para colaborar más con nuestros clientes y, gracias a la facilidad de Holded en esta fase voluntaria, las asesorías podrán llegar preparadas al 1 de enero.", speaker: "Florencia D'Andrea", company: "Lidera tu negocio", role: "Directora del área fiscal y contable", source: "Verifactu con Holded", source_key: "verifactu", author_type: "asesoria", theme: "Facturación" }
     ];
 
     const SOURCE_LABELS = {
@@ -599,6 +711,12 @@
       collab: 'Contabilidad Colaborativa',
       verifactu: 'Verifactu',
       custom: 'My quotes'
+    };
+
+    const AUTHOR_LABELS = {
+      solution_partner: 'Solution Partner',
+      asesoria: 'Asesoría',
+      otro: 'Otro'
     };
 
     // ============================================================
@@ -683,7 +801,10 @@
       }
 
       grid.innerHTML = list.map(q => `
-        <div class="quote-card" data-id="${q.id}">
+        <div class="quote-card${bulkMode ? ' selectable' : ''}${selectedIds.has(q.id) ? ' selected' : ''}" data-id="${q.id}" ${bulkMode ? `onclick="toggleQuoteSelection(${q.id})"` : ''}>
+          <div class="quote-checkbox">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
           <div class="quote-actions">
             <button class="action-btn" onclick="copyQuote(${q.id})" title="Copy">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -713,9 +834,10 @@
             </div>
           </div>
           <div class="quote-tags">
+            ${q.author_type ? `<span class="tag tag-author">${AUTHOR_LABELS[q.author_type] || q.author_type}</span>` : ''}
+            ${q.theme ? `<span class="tag tag-theme">${escapeHtml(q.theme)}</span>` : ''}
             ${q.source ? `<span class="tag tag-source">${escapeHtml(q.source)}</span>` : ''}
             ${q.company ? `<span class="tag tag-page">${escapeHtml(q.company)}</span>` : ''}
-            ${q.theme ? `<span class="tag tag-theme">${escapeHtml(q.theme)}</span>` : ''}
           </div>
         </div>
       `).join('');
@@ -729,7 +851,11 @@
       let filtered = quotes;
 
       if (currentFilter !== 'all') {
-        filtered = filtered.filter(q => q.source_key === currentFilter);
+        if (currentFilter === 'General') {
+          filtered = filtered.filter(q => !THEME_FILTERS.includes(q.theme));
+        } else {
+          filtered = filtered.filter(q => q.theme === currentFilter);
+        }
       }
 
       if (query) {
@@ -753,22 +879,30 @@
       filterQuotes();
     }
 
+    const THEME_FILTERS = ['Facturación', 'Contabilidad', 'Nóminas', 'Inventario', 'Conciliación bancaria'];
+
     function updateFilterTabs() {
-      const keys = [...new Set(quotes.map(q => q.source_key).filter(Boolean))];
       const container = document.getElementById('filter-tabs');
       let html = `<button class="filter-tab ${currentFilter === 'all' ? 'active' : ''}" data-filter="all" onclick="setFilter('all')">All quotes</button>`;
-      keys.forEach(key => {
-        const label = SOURCE_LABELS[key] || key;
-        html += `<button class="filter-tab ${currentFilter === key ? 'active' : ''}" data-filter="${key}" onclick="setFilter('${key}')">${label}</button>`;
+      THEME_FILTERS.forEach(theme => {
+        const count = quotes.filter(q => q.theme === theme).length;
+        if (count > 0) {
+          html += `<button class="filter-tab ${currentFilter === theme ? 'active' : ''}" data-filter="${theme}" onclick="setFilter('${theme}')">${theme} (${count})</button>`;
+        }
       });
+      // Add "General" for anything that doesn't match fixed themes
+      const generalCount = quotes.filter(q => !THEME_FILTERS.includes(q.theme)).length;
+      if (generalCount > 0) {
+        html += `<button class="filter-tab ${currentFilter === 'General' ? 'active' : ''}" data-filter="General" onclick="setFilter('General')">General (${generalCount})</button>`;
+      }
       container.innerHTML = html;
     }
 
     function updateStats() {
-      document.getElementById('stat-total').textContent    = quotes.length;
-      document.getElementById('stat-sources').textContent  = [...new Set(quotes.map(q => q.source).filter(Boolean))].length;
-      document.getElementById('stat-speakers').textContent = [...new Set(quotes.map(q => q.speaker).filter(Boolean))].length;
-      document.getElementById('stat-themes').textContent   = [...new Set(quotes.map(q => q.theme).filter(Boolean))].length;
+      document.getElementById('stat-total').textContent = quotes.length;
+      document.getElementById('stat-solution-partner').textContent = quotes.filter(q => q.author_type === 'solution_partner').length;
+      document.getElementById('stat-asesoria').textContent = quotes.filter(q => q.author_type === 'asesoria').length;
+      document.getElementById('stat-otro').textContent = quotes.filter(q => !q.author_type || q.author_type === 'otro').length;
     }
 
     // ============================================================
@@ -779,6 +913,7 @@
       document.getElementById('form-text').value = '';
       document.getElementById('form-speaker').value = '';
       document.getElementById('form-company').value = '';
+      document.getElementById('form-author-type').value = '';
       document.getElementById('form-role').value = '';
       document.getElementById('form-source').value = '';
       document.getElementById('form-theme').value = '';
@@ -798,6 +933,7 @@
       document.getElementById('form-text').value = q.text;
       document.getElementById('form-speaker').value = q.speaker;
       document.getElementById('form-company').value = q.company || '';
+      document.getElementById('form-author-type').value = q.author_type || '';
       document.getElementById('form-role').value = q.role || '';
       document.getElementById('form-source').value = q.source || '';
       document.getElementById('form-theme').value = q.theme || '';
@@ -807,16 +943,17 @@
     }
 
     async function saveQuote() {
-      const editId  = document.getElementById('form-id').value;
-      const text    = document.getElementById('form-text').value.trim();
-      const speaker = document.getElementById('form-speaker').value.trim();
-      const company = document.getElementById('form-company').value.trim();
-      const role    = document.getElementById('form-role').value.trim();
-      const source  = document.getElementById('form-source').value.trim();
-      const theme   = document.getElementById('form-theme').value.trim();
+      const editId     = document.getElementById('form-id').value;
+      const text       = document.getElementById('form-text').value.trim();
+      const speaker    = document.getElementById('form-speaker').value.trim();
+      const company    = document.getElementById('form-company').value.trim();
+      const authorType = document.getElementById('form-author-type').value;
+      const role       = document.getElementById('form-role').value.trim();
+      const source     = document.getElementById('form-source').value.trim();
+      const theme      = document.getElementById('form-theme').value;
 
-      if (!text || !speaker || !company) {
-        showToast('Please fill in quote text, speaker, and company', true);
+      if (!text || !speaker || !company || !authorType) {
+        showToast('Please fill in quote text, speaker, company, and author type', true);
         return;
       }
 
@@ -825,6 +962,7 @@
 
       const record = {
         text, speaker, company,
+        author_type: authorType,
         role: role || '',
         source: source || 'Manual entry',
         source_key: 'custom',
@@ -893,9 +1031,9 @@
 
     function exportQuotes() {
       const csv = [
-        ['Text','Speaker','Company','Role','Source','Theme'].join(','),
+        ['Text','Speaker','Company','Author Type','Role','Source','Theme'].join(','),
         ...quotes.map(q =>
-          [q.text, q.speaker, q.company, q.role, q.source, q.theme]
+          [q.text, q.speaker, q.company, AUTHOR_LABELS[q.author_type] || q.author_type || '', q.role, q.source, q.theme]
             .map(v => `"${(v||'').replace(/"/g,'""')}"`)
             .join(',')
         )
@@ -909,6 +1047,116 @@
     }
 
     // ============================================================
+    // Bulk Edit
+    // ============================================================
+    let bulkMode = false;
+    let selectedIds = new Set();
+
+    function toggleBulkMode() {
+      bulkMode = !bulkMode;
+      selectedIds.clear();
+      document.getElementById('bulk-bar').classList.toggle('active', bulkMode);
+      document.getElementById('btn-bulk-toggle').innerHTML = bulkMode
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Bulk edit';
+      document.getElementById('bulk-author-type').value = '';
+      document.getElementById('bulk-theme').value = '';
+      updateBulkCount();
+      filterQuotes();
+    }
+
+    function toggleQuoteSelection(id) {
+      if (!bulkMode) return;
+      if (selectedIds.has(id)) {
+        selectedIds.delete(id);
+      } else {
+        selectedIds.add(id);
+      }
+      // Update card visual
+      const card = document.querySelector(`.quote-card[data-id="${id}"]`);
+      if (card) card.classList.toggle('selected', selectedIds.has(id));
+      updateBulkCount();
+    }
+
+    function selectAllQuotes() {
+      // Select all currently visible quotes
+      const visibleCards = document.querySelectorAll('.quote-card[data-id]');
+      const allSelected = visibleCards.length > 0 && [...visibleCards].every(c => selectedIds.has(Number(c.dataset.id)));
+
+      if (allSelected) {
+        // Deselect all
+        visibleCards.forEach(c => {
+          selectedIds.delete(Number(c.dataset.id));
+          c.classList.remove('selected');
+        });
+      } else {
+        // Select all visible
+        visibleCards.forEach(c => {
+          selectedIds.add(Number(c.dataset.id));
+          c.classList.add('selected');
+        });
+      }
+      updateBulkCount();
+    }
+
+    function updateBulkCount() {
+      const count = selectedIds.size;
+      document.getElementById('bulk-count').textContent = count === 1 ? '1 selected' : `${count} selected`;
+    }
+
+    async function applyBulkEdit() {
+      if (selectedIds.size === 0) {
+        showToast('Select at least one quote', true);
+        return;
+      }
+
+      const newAuthorType = document.getElementById('bulk-author-type').value;
+      const newTheme = document.getElementById('bulk-theme').value;
+
+      if (!newAuthorType && !newTheme) {
+        showToast('Choose an author type or theme to apply', true);
+        return;
+      }
+
+      const updates = {};
+      if (newAuthorType) updates.author_type = newAuthorType;
+      if (newTheme) updates.theme = newTheme;
+
+      const ids = [...selectedIds];
+
+      try {
+        if (useSupabase) {
+          const { error } = await supabaseClient
+            .from('quotes')
+            .update(updates)
+            .in('id', ids);
+          if (error) throw error;
+        }
+
+        // Update local state
+        quotes.forEach(q => {
+          if (ids.includes(q.id)) {
+            if (newAuthorType) q.author_type = newAuthorType;
+            if (newTheme) q.theme = newTheme;
+          }
+        });
+
+        const label = [];
+        if (newAuthorType) label.push(AUTHOR_LABELS[newAuthorType]);
+        if (newTheme) label.push(newTheme);
+
+        showToast(`Updated ${ids.length} quotes: ${label.join(' + ')}`);
+        toggleBulkMode();
+        updateStats();
+        updateFilterTabs();
+        filterQuotes();
+      } catch (e) {
+        console.error('Bulk update error:', e);
+        showToast('Error updating quotes: ' + e.message, true);
+      }
+    }
+
+    // ============================================================
     // Upload & File Parsing
     // ============================================================
     let selectedFile = null;
@@ -918,6 +1166,8 @@
       selectedFile = null;
       document.getElementById('file-input').value = '';
       document.getElementById('file-selected').style.display = 'none';
+      document.getElementById('upload-author-type').value = '';
+      document.getElementById('upload-theme').value = '';
       document.getElementById('upload-speaker').value = '';
       document.getElementById('upload-company').value = '';
       document.getElementById('upload-source').value = '';
@@ -1001,17 +1251,25 @@
         }
 
         // Apply defaults
+        const defAuthorType = document.getElementById('upload-author-type').value;
+        const defTheme   = document.getElementById('upload-theme').value;
         const defSpeaker = document.getElementById('upload-speaker').value.trim();
         const defCompany = document.getElementById('upload-company').value.trim();
         const defSource  = document.getElementById('upload-source').value.trim() || selectedFile.name;
 
+        if (!defAuthorType) {
+          showToast('Please select an author type', true);
+          return;
+        }
+
         extractedQuotes = extractedQuotes.map(q => ({
           ...q,
+          author_type: q.author_type || defAuthorType,
           speaker: q.speaker || defSpeaker || 'Unknown',
           company: q.company || defCompany || 'Unknown',
           source:  q.source  || defSource,
           source_key: 'custom',
-          theme: q.theme || 'General',
+          theme: q.theme || defTheme || 'General',
           role: q.role || ''
         }));
 
